@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5444/users_db
+    username: postgres
+    password: root
+
+api-properties:
+  min-age: 18
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
