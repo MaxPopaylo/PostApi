@@ -1,7 +1,9 @@
 package api.TestAPI.utils.validations;
 
+import api.TestAPI.utils.validations.annotations.ValidAge;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +12,11 @@ import java.time.Period;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class AgeValidator implements ConstraintValidator<ValidAge, Date> {
 
     @Value("${api-properties.min-age}")
-    private static int minAge;
+    private int minAge;
 
     @Override
     public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
@@ -25,6 +28,11 @@ public class AgeValidator implements ConstraintValidator<ValidAge, Date> {
             return false;
         }
 
-        return Period.between(currentDay, birthDay).getYears() >= 18;
+        return Period.between(birthDay, currentDay).getYears() >= minAge;
     }
+
 }
+
+
+
+

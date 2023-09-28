@@ -4,9 +4,12 @@ spring:
     username: postgres
     password: root
 
-api-properties:
-  min-age: 18
-
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+server:
+  port: 8080
+
+api-properties:
+  min-age: 18

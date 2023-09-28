@@ -1,8 +1,10 @@
 package api.TestAPI.service;
 
+import api.TestAPI.dto.SearchByBirthdayDto;
 import api.TestAPI.dto.UserDto;
 import api.TestAPI.entity.User;
 import api.TestAPI.repository.UserRepository;
+import api.TestAPI.utils.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
@@ -29,34 +31,44 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> showByBirthday(Date fromDate, Date toDate) {
-        return userRepository.findAllByBirthdayBetween(fromDate, toDate);
+    public List<User> showByBirthday(SearchByBirthdayDto dto) {
+        return userRepository.findAllByBirthdayBetween(dto.getFrom_date(), dto.getTo_date());
         //TODO
     }
 
     @Transactional
-    public void save (UserDto userDto) {
-        User user = convertUserDto(userDto);
+    public void save (UserDto dto) {
+        User user = convertUserDto(dto);
         userRepository.save(user);
     }
 
     @Transactional
-    public void update(int id, UserDto userDto) {
-        User user = convertUserDto(userDto);
+    public void delete(int id) {
+        userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void update(int id, UserDto dto) {
+        User user = convertUserDto(dto);
+        user.setId(id);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void update(int id, User user) {
         user.setId(id);
         userRepository.save(user);
     }
 
     public static User convertUserDto(UserDto userDto) {
-        User user = new User();
-        user.setEmail(userDto.getEmail());
-        user.setFirst_name(userDto.getFirst_name());
-        user.setLast_name(userDto.getLast_name());
-        user.setBirthday(userDto.getBirthday());
-        user.setAddress(userDto.getAddress());
-        user.setPhone(userDto.getPhone());
-
-        return user;
+        return User.builder()
+                .email(userDto.getEmail())
+                .first_name(userDto.getFirst_name())
+                .last_name(userDto.getLast_name())
+                .birthday(userDto.getBirthday())
+                .address(userDto.getAddress())
+                .phone(userDto.getPhone())
+                .build();
     }
 
 }

@@ -1,10 +1,13 @@
-package api.TestAPI.utils.validations;
+package api.TestAPI.utils.validations.annotations;
 
 import api.TestAPI.utils.validations.AgeValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 
@@ -13,7 +16,9 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = AgeValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidAge {
-    String message() default "Invalid age or you are younger than 18 years old";
+    String message() default "Invalid date or you are younger than 18 years old";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }
