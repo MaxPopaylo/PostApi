@@ -131,22 +131,22 @@ public class UserController {
         return new ResponseEntity<>("Last name was updated", HttpStatus.OK);
     }
 
-//    @PutMapping("/update/{id}/birthday")
-//    public ResponseEntity<?> updateBirthday(@PathVariable int id, @Valid @RequestBody BirthdayDto birthday,
-//                                        BindingResult bindingResult) {
-//        Optional<User> user = userService.showById(id);
-//        if (user.isEmpty()) {
-//            throw new UserNotFoundException();
-//        }
-//
-//        if (bindingResult.hasErrors()) {
-//            throw new ValidationException(BindingResultParser.parse(bindingResult));
-//        }
-//
-//        user.get().setBirthday(birthday.getBirthday());
-//        userService.update(id, user.get());
-//        return new ResponseEntity<>("Birthday was updated", HttpStatus.OK);
-//    }
+    @PutMapping("/update/{id}/birthday")
+    public ResponseEntity<?> updateBirthday(@PathVariable int id, @Valid @RequestBody BirthdayDto birthday,
+                                        BindingResult bindingResult) {
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(BindingResultParser.parse(bindingResult));
+        }
+
+        user.get().setBirthday(birthday.getBirthday());
+        userService.update(id, user.get());
+        return new ResponseEntity<>("Birthday was updated", HttpStatus.OK);
+    }
 
     @PutMapping("/update/{id}/address")
     public ResponseEntity<?> updateAddress(@PathVariable int id, @RequestBody AddressDto address) {
