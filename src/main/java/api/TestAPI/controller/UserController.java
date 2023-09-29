@@ -32,13 +32,20 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable int id) {
-       User user = checkUser(id);
-       return new ResponseEntity<>(user, HttpStatus.OK);
+       Optional<User> user = userService.showById(id);
+       if (user.isEmpty()) {
+           throw new UserNotFoundException();
+       }
+
+       return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
     @GetMapping("/by_birthday")
     public ResponseEntity<?> indexByBirthday(@Valid @RequestBody SearchByBirthdayDto dto, BindingResult bindingResult) {
-        checkValidation(bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(BindingResultParser.parse(bindingResult));
+        }
+
         if (dto.getTo_date().before(dto.getFrom_date())) {
             throw new InvalidDateException();
         }
@@ -48,23 +55,36 @@ public class UserController {
 
     @PostMapping("/add")
     public ResponseEntity<?> create(@Valid @RequestBody UserDto dto, BindingResult bindingResult) {
-        checkValidation(bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(BindingResultParser.parse(bindingResult));
+        }
+
         userService.save(dto);
         return new ResponseEntity<>("User " + dto.getEmail() + " was created",HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        User user = checkUser(id);
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
         userService.delete(id);
-        return new ResponseEntity<>("User " + user.getEmail() + " was deleted", HttpStatus.OK);
+        return new ResponseEntity<>("User " + user.get().getEmail() + " was deleted", HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody UserDto dto,
                                     BindingResult bindingResult) {
-        User user = checkUser(id);
-        checkValidation(bindingResult);
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(BindingResultParser.parse(bindingResult));
+        }
 
         userService.update(id, dto);
         return new ResponseEntity<>("User " + dto.getEmail() + " was updated", HttpStatus.OK);
@@ -73,74 +93,83 @@ public class UserController {
     @PutMapping("/update/{id}/email")
     public ResponseEntity<?> updateEmail(@PathVariable int id, @Valid @RequestBody EmailDto email,
                                     BindingResult bindingResult) {
-        User user = checkUser(id);
-        checkValidation(bindingResult);
-
-        user.setEmail(email.getEmail());
-        userService.update(id, user);
-        return new ResponseEntity<>("Email was updated", HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{id}/first_name")
-    public ResponseEntity<?> updateName(@PathVariable int id, @RequestBody FirstNameDto firs_name) {
-        User user = checkUser(id);
-
-        user.setFirst_name(firs_name.getFirst_name());
-        userService.update(id, user);
-        return new ResponseEntity<>("Name was updated", HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{id}/last_name")
-    public ResponseEntity<?> updateLastName(@PathVariable int id, @RequestBody LastNameDto last_name) {
-        User user = checkUser(id);
-
-        user.setLast_name(last_name.getLast_name());
-        userService.update(id, user);
-        return new ResponseEntity<>("Last name was updated", HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{id}/birthday")
-    public ResponseEntity<?> updateBirthday(@PathVariable int id, @Valid @RequestBody BirthdayDto birthday,
-                                        BindingResult bindingResult) {
-        User user = checkUser(id);
-        checkValidation(bindingResult);
-
-        user.setBirthday(birthday.getBirthday());
-        userService.update(id, user);
-        return new ResponseEntity<>("Birthday was updated", HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{id}/address")
-    public ResponseEntity<?> updateAddress(@PathVariable int id, @RequestBody AddressDto address) {
-        User user = checkUser(id);
-
-        user.setAddress(address.getAddress());
-        userService.update(id, user);
-        return new ResponseEntity<>("Address was updated", HttpStatus.OK);
-    }
-
-    @PutMapping("/update/{id}/phone")
-    public ResponseEntity<?> updatePhone(@PathVariable int id, @RequestBody PhoneDto phone) {
-        User user = checkUser(id);
-
-        user.setPhone(phone.getPhone());
-        userService.update(id, user);
-        return new ResponseEntity<>("Phone was updated", HttpStatus.OK);
-    }
-
-    private User checkUser(int id) {
         Optional<User> user = userService.showById(id);
         if (user.isEmpty()) {
             throw new UserNotFoundException();
         }
 
-        return user.get();
-    }
-
-    private void checkValidation (BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(BindingResultParser.parse(bindingResult));
         }
+
+        user.get().setEmail(email.getEmail());
+        userService.update(id, user.get());
+        return new ResponseEntity<>("Email was updated", HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}/first_name")
+    public ResponseEntity<?> updateName(@PathVariable int id, @RequestBody FirstNameDto firs_name) {
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        user.get().setFirst_name(firs_name.getFirst_name());
+        userService.update(id, user.get());
+        return new ResponseEntity<>("Name was updated", HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}/last_name")
+    public ResponseEntity<?> updateLastName(@PathVariable int id, @RequestBody LastNameDto last_name) {
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        user.get().setLast_name(last_name.getLast_name());
+        userService.update(id, user.get());
+        return new ResponseEntity<>("Last name was updated", HttpStatus.OK);
+    }
+
+//    @PutMapping("/update/{id}/birthday")
+//    public ResponseEntity<?> updateBirthday(@PathVariable int id, @Valid @RequestBody BirthdayDto birthday,
+//                                        BindingResult bindingResult) {
+//        Optional<User> user = userService.showById(id);
+//        if (user.isEmpty()) {
+//            throw new UserNotFoundException();
+//        }
+//
+//        if (bindingResult.hasErrors()) {
+//            throw new ValidationException(BindingResultParser.parse(bindingResult));
+//        }
+//
+//        user.get().setBirthday(birthday.getBirthday());
+//        userService.update(id, user.get());
+//        return new ResponseEntity<>("Birthday was updated", HttpStatus.OK);
+//    }
+
+    @PutMapping("/update/{id}/address")
+    public ResponseEntity<?> updateAddress(@PathVariable int id, @RequestBody AddressDto address) {
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        user.get().setAddress(address.getAddress());
+        userService.update(id, user.get());
+        return new ResponseEntity<>("Address was updated", HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{id}/phone")
+    public ResponseEntity<?> updatePhone(@PathVariable int id, @RequestBody PhoneDto phone) {
+        Optional<User> user = userService.showById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+
+        user.get().setPhone(phone.getPhone());
+        userService.update(id, user.get());
+        return new ResponseEntity<>("Phone was updated", HttpStatus.OK);
     }
 
 }
