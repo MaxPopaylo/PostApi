@@ -32,7 +32,6 @@ public class UserService {
 
     public List<User> showByBirthday(SearchByBirthdayDto dto) {
         return userRepository.findAllByBirthdayBetween(dto.getFrom_date(), dto.getTo_date());
-        //TODO
     }
 
     @Transactional
