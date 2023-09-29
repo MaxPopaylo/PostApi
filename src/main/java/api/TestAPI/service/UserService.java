@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@EnableAsync
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
@@ -60,7 +59,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public static User convertUserDto(UserDto userDto) {
+    private static User convertUserDto(UserDto userDto) {
         return User.builder()
                 .email(userDto.getEmail())
                 .first_name(userDto.getFirst_name())
