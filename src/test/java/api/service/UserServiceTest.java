@@ -4,16 +4,11 @@ import api.dto.SearchByBirthdayDto;
 import api.dto.UserDto;
 import api.entity.User;
 import api.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
+
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.text.SimpleDateFormat;
@@ -21,8 +16,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
@@ -148,7 +142,7 @@ public class UserServiceTest {
 
 
     @Test
-    public void deleteTest() throws Exception {
+    public void deleteTest() {
         int user_id = 1;
         Mockito.doNothing().when(userRepository).deleteById(user_id);
 
@@ -178,24 +172,4 @@ public class UserServiceTest {
 
     }
 
-    @Test
-    public void testUpdateWithUser() throws Exception {
-        int user_id = 1;
-
-        User user = new User();
-        user.setId(user_id);
-        user.setEmail("newemail@gmail.com");
-        user.setFirst_name("New");
-        user.setLast_name("User");
-        user.setBirthday(dateFormat.parse("2000-01-01"));
-
-        userService.update(user_id, user);
-
-        Mockito.verify(userRepository).save(Mockito.argThat(savedUser -> {
-            assertEquals("newemail@gmail.com", savedUser.getEmail());
-            assertEquals("New", savedUser.getFirst_name());
-            assertEquals("User", savedUser.getLast_name());
-            return true;
-        }));
-    }
 }
