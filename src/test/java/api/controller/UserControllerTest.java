@@ -93,7 +93,7 @@ public class UserControllerTest {
                 "\"birthday\": \"" + birthday + "\"}";
 
         mvc.perform(MockMvcRequestBuilders
-                        .post("/users/add")
+                        .post("/users")
                         .content(jsonRequestBody)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -112,7 +112,7 @@ public class UserControllerTest {
                 "\"birthday\": \"" + birthday + "\"}";
 
         mvc.perform(MockMvcRequestBuilders
-                        .put("/users/update/" + user_id)
+                        .patch("/users/" + user_id)
                         .content(jsonRequestBody)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -124,7 +124,7 @@ public class UserControllerTest {
         int user_id = 1;
 
         mvc.perform(MockMvcRequestBuilders
-                        .delete("/users/delete/" + user_id)
+                        .delete("/users/" + user_id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
