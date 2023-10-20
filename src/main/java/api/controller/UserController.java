@@ -45,21 +45,21 @@ public class UserController {
         return new ResponseEntity<>(userService.showByBirthday(dto), HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody UserDto dto, BindingResult bindingResult) {
         checkValidation(bindingResult);
         userService.save(dto);
         return new ResponseEntity<>("User " + dto.getEmail() + " was created",HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         User user = checkUser(id);
         userService.delete(id);
         return new ResponseEntity<>("User " + user.getEmail() + " was deleted", HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody UserDto dto,
                                     BindingResult bindingResult) {
         checkUser(id);
