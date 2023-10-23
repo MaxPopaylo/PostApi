@@ -3,14 +3,13 @@ package api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class  User {
 
     @Id
     @Column(name = "id")
@@ -31,11 +30,4 @@ public class User {
 
     @Column(name = "phone")
     private String phone;
-
-    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
-    private List<Order> sentOrders;
-
-    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY)
-    private List<Order> receivedOrders;
-
 }
