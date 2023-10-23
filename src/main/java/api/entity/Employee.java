@@ -1,16 +1,18 @@
 package api.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "employees")
+public class Employee {
 
     @Id
     @Column(name = "id")
@@ -32,10 +34,17 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
-    private List<Order> sentOrders;
+    @Column(name = "experience")
+    private int experience;
 
-    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY)
-    private List<Order> receivedOrders;
+    @Column(name = "hired")
+    private LocalDate hired;
+
+    @Column(name = "fired")
+    private LocalDate fired;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "work_department_id")
+    private Department work_department;
 
 }

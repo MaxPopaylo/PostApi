@@ -2,7 +2,7 @@
 <project version="4">
   <component name="PersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit moduleName="TestAPI" name="Default">
+      <persistence-unit moduleName="PostAPI" name="Default">
         <packages>
           <package value="api" />
         </packages>
