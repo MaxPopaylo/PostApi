@@ -1,7 +1,7 @@
 package api.utils;
 
+import api.utils.exceptions.EntityNotFoundException;
 import api.utils.exceptions.InvalidDateException;
-import api.utils.exceptions.UserNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseError handle(UserNotFoundException e) {
+    public ResponseError handle(EntityNotFoundException e) {
         log.error(e.getMessage(), e);
         return new ResponseError(HttpStatus.NOT_FOUND, e.getMessage());
     }

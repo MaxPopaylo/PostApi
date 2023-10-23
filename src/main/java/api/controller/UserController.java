@@ -3,10 +3,10 @@ package api.controller;
 import api.dto.UserDto;
 import api.entity.User;
 import api.service.UserService;
-import api.utils.exceptions.UserNotFoundException;
 import api.utils.validations.BindingResultParser;
 import api.utils.validations.CreateValidation;
 import api.utils.validations.UpdateValidation;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ public class UserController {
     public ResponseEntity<?> create(@Validated(CreateValidation.class) @RequestBody UserDto dto, BindingResult bindingResult) {
         checkValidation(bindingResult);
         userService.save(dto);
-        return new ResponseEntity<>("User " + dto.getSurname() + " " + dto.getName() + " was created",HttpStatus.OK);
+        return new ResponseEntity<>("User " + dto.getSurname() + " " + dto.getName() + " was created",HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -68,7 +68,7 @@ public class UserController {
     private User checkUser(int id) {
         Optional<User> user = userService.showById(id);
         if (user.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new EntityNotFoundException();
         }
 
         return user.get();
