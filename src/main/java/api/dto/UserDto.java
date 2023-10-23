@@ -1,33 +1,26 @@
 package api.dto;
 
-import api.utils.validations.annotations.ValidAge;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import api.utils.validations.CreateValidation;
+import api.utils.validations.UpdateValidation;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class UserDto {
 
-    @Email(message = "Invalid email")
-    @NotNull(message = "Email cannot be empty")
+    @Email(message = "Invalid email", groups = {CreateValidation.class, UpdateValidation.class})
     private String email;
 
-    @NotNull(message = "Name cannot be empty")
-    private String first_name;
+    @NotNull(message = "Name cannot be empty", groups = CreateValidation.class)
+    private String name;
 
-    @NotNull(message = "Last name cannot be empty")
-    private String last_name;
+    @NotNull(message = "Surname cannot be empty", groups = CreateValidation.class)
+    private String surname;
 
-    @ValidAge
-    @Temporal(TemporalType.DATE)
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Birthday cannot be empty")
-    private Date birthday;
+    @NotNull(message = "Patronymic cannot be empty", groups = CreateValidation.class)
+    private String patronymic;
 
-    private String address;
+    @NotNull(message = "Phone cannot be empty", groups = CreateValidation.class)
     private String phone;
 }

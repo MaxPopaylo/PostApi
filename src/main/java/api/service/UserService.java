@@ -1,6 +1,5 @@
 package api.service;
 
-import api.dto.SearchByBirthdayDto;
 import api.dto.UserDto;
 import api.entity.User;
 import api.repository.UserRepository;
@@ -26,10 +25,6 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> showByBirthday(SearchByBirthdayDto dto) {
-        return userRepository.findAllByBirthdayBetween(dto.getFrom_date(), dto.getTo_date());
-    }
-
     @Transactional
     public void save (UserDto dto) {
         User user = convertUserDto(dto);
@@ -48,21 +43,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Transactional
-    public void update(int id, User user) {
-        user.setId(id);
-        userRepository.save(user);
-    }
-
     private static User convertUserDto(UserDto userDto) {
-        return User.builder()
-                .email(userDto.getEmail())
-                .first_name(userDto.getFirst_name())
-                .last_name(userDto.getLast_name())
-                .birthday(userDto.getBirthday())
-                .address(userDto.getAddress())
-                .phone(userDto.getPhone())
-                .build();
+        User user = new User();
+
+        user.setEmail(userDto.getEmail());
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setPatronymic(userDto.getPatronymic());
+        user.setPhone(userDto.getPhone());
+
+        return user;
     }
 
 }

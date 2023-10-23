@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>api</groupId>
-	<artifactId>TestAPI</artifactId>
+	<artifactId>PostApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>TestAPI</name>
 	<description>Demo project for Spring Boot</description>
@@ -35,7 +35,10 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.2.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 
 
 		<dependency>

@@ -1,8 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5444/users_db
+    url: jdbc:postgresql://localhost:5444/post_db
     username: postgres
     password: root
+  flyway:
+    locations: classpath:db.migration
 
 springdoc:
   swagger-ui:
@@ -10,6 +12,3 @@ springdoc:
 
 server:
   port: 8080
-
-api-properties:
-  min-age: 18

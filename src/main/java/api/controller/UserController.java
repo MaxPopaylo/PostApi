@@ -1,18 +1,18 @@
 package api.controller;
 
-import api.dto.SearchByBirthdayDto;
 import api.dto.UserDto;
 import api.entity.User;
 import api.service.UserService;
-import api.utils.exceptions.InvalidDateException;
 import api.utils.exceptions.UserNotFoundException;
 import api.utils.validations.BindingResultParser;
-import jakarta.validation.Valid;
+import api.utils.validations.CreateValidation;
+import api.utils.validations.UpdateValidation;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -35,38 +35,34 @@ public class UserController {
        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/by_birthday")
-    public ResponseEntity<?> indexByBirthday(@Valid @RequestBody SearchByBirthdayDto dto, BindingResult bindingResult) {
-        checkValidation(bindingResult);
-        if (dto.getTo_date().before(dto.getFrom_date())) {
-            throw new InvalidDateException();
-        }
-
-        return new ResponseEntity<>(userService.showByBirthday(dto), HttpStatus.OK);
-    }
-
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody UserDto dto, BindingResult bindingResult) {
+    public ResponseEntity<?> create(@Validated(CreateValidation.class) @RequestBody UserDto dto, BindingResult bindingResult) {
         checkValidation(bindingResult);
         userService.save(dto);
-        return new ResponseEntity<>("User " + dto.getEmail() + " was created",HttpStatus.OK);
+        return new ResponseEntity<>("User " + dto.getSurname() + " " + dto.getName() + " was created",HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
         User user = checkUser(id);
         userService.delete(id);
-        return new ResponseEntity<>("User " + user.getEmail() + " was deleted", HttpStatus.OK);
+        return new ResponseEntity<>("User " + user.getSurname() + " " + user.getName() + " was deleted", HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @Valid @RequestBody UserDto dto,
+    public ResponseEntity<?> update(@PathVariable int id, @Validated(UpdateValidation.class) @RequestBody UserDto dto,
                                     BindingResult bindingResult) {
-        checkUser(id);
+        User pachedUser = checkUser(id);
         checkValidation(bindingResult);
 
+        dto.setEmail(dto.getEmail() == null ? pachedUser.getEmail() : dto.getEmail());
+        dto.setName(dto.getName() == null ? pachedUser.getName() : dto.getName());
+        dto.setSurname(dto.getSurname() == null ? pachedUser.getSurname() : dto.getSurname());
+        dto.setPatronymic(dto.getPatronymic() == null ? pachedUser.getPatronymic() : dto.getPatronymic());
+        dto.setPhone(dto.getPhone() == null ? pachedUser.getPhone() : dto.getPhone());
+
         userService.update(id, dto);
-        return new ResponseEntity<>("User " + dto.getEmail() + " was updated", HttpStatus.OK);
+        return new ResponseEntity<>("User " + dto.getSurname() + " " + dto.getName() + " was updated", HttpStatus.OK);
     }
 
     private User checkUser(int id) {
