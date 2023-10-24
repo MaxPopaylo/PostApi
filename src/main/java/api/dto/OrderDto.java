@@ -6,9 +6,11 @@ import api.entity.User;
 import api.utils.validations.CreateValidation;
 import api.valueobject.Status;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
+@Data
 public class OrderDto {
 
     @NotNull(message = "Title cannot be empty", groups = CreateValidation.class)

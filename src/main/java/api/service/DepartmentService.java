@@ -31,6 +31,12 @@ public class DepartmentService {
         repository.save(department);
     }
 
+    @Transactional
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
+
+
     private static Department convertDepartmentDto(DepartmentDto departmentDto) {
         Department department = new Department();
 

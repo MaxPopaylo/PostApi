@@ -43,7 +43,7 @@ public class Employee {
     @Column(name = "fired")
     private LocalDate fired;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "work_department_id")
     private Department work_department;
 

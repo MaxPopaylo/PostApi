@@ -30,11 +30,8 @@ public class DepartmentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getInfo(@PathVariable int id) {
-        Optional<Department> department = service.showById(id);
-        if (department.isEmpty()){
-            throw new EntityNotFoundException();
-        }
 
+        Department department = checkDepartment(id);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
@@ -45,7 +42,23 @@ public class DepartmentController {
         }
 
         service.create(dto);
-        return new ResponseEntity<>("User " + dto.getTitle() + " was created",HttpStatus.CREATED);
+        return new ResponseEntity<>("User " + dto.getTitle() + " was opened",HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> close(@PathVariable int id) {
+        Department department = checkDepartment(id);
+        service.delete(id);
+        return new ResponseEntity<>("Department " + department.getTitle() + " was closed", HttpStatus.OK);
+    }
+
+    private Department checkDepartment(int id) {
+        Optional<Department> department =service.showById(id);
+        if (department.isEmpty()) {
+            throw new EntityNotFoundException("Department not found");
+        }
+
+        return department.get();
     }
 
 }

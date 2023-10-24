@@ -1,12 +1,13 @@
 package api.controller;
 
+import api.dto.SearchByPhoneDto;
 import api.dto.UserDto;
 import api.entity.User;
 import api.service.UserService;
+import api.utils.exceptions.EntityNotFoundException;
 import api.utils.validations.BindingResultParser;
 import api.utils.validations.CreateValidation;
 import api.utils.validations.UpdateValidation;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,16 @@ public class UserController {
     public ResponseEntity<?> show(@PathVariable int id) {
        User user = checkUser(id);
        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/by_phone")
+    public ResponseEntity<?> showByPhone(@RequestBody SearchByPhoneDto dto) {
+        Optional<User> user = userService.showByPhone(dto.getPhone());
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("User not found");
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping
@@ -68,7 +79,7 @@ public class UserController {
     private User checkUser(int id) {
         Optional<User> user = userService.showById(id);
         if (user.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("User not found");
         }
 
         return user.get();

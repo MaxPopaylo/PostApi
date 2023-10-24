@@ -25,6 +25,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> showByPhone(String phone) {
+        return userRepository.findUserByPhone(phone);
+    }
+
     @Transactional
     public void save (UserDto dto) {
         User user = convertUserDto(dto);
