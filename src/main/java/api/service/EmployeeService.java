@@ -47,9 +47,9 @@ public class EmployeeService {
     }
 
     @Transactional
-    public void fire(int id, Employee employee) {
+    public void fire(Employee employee) {
         employee.setFired(LocalDate.now());
-        repository.deleteById(id);
+        repository.save(employee);
     }
 
     @Transactional

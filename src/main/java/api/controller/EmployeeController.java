@@ -66,10 +66,10 @@ public class EmployeeController {
         return new ResponseEntity<>("Employee " + dto.getSurname() + " " + dto.getName() + " was hired",HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/fire")
     public ResponseEntity<?> fire(@PathVariable int id) {
         Employee employee = checkEmployee(id);
-        service.fire(id, employee);
+        service.fire(employee);
         return new ResponseEntity<>("Employee " + employee.getSurname() + " " + employee.getName() + " was fired", HttpStatus.OK);
     }
 

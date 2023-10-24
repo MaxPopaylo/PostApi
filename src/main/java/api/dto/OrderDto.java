@@ -1,10 +1,5 @@
 package api.dto;
 
-import api.entity.Department;
-import api.entity.Employee;
-import api.entity.User;
-import api.utils.validations.CreateValidation;
-import api.valueobject.Status;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -13,32 +8,30 @@ import java.math.BigDecimal;
 @Data
 public class OrderDto {
 
-    @NotNull(message = "Title cannot be empty", groups = CreateValidation.class)
+    @NotNull(message = "Title cannot be empty")
     private String title;
 
-    @NotNull(message = "Type cannot be empty", groups = CreateValidation.class)
+    @NotNull(message = "Type cannot be empty")
     private String type;
 
+    @NotNull(message = "Price of parcel cannot be empty")
     private BigDecimal parcel_price;
 
-    @NotNull(message = "Price of delivery cannot be empty", groups = CreateValidation.class)
+    @NotNull(message = "Price of delivery cannot be empty")
     private BigDecimal delivery_price;
 
-    @NotNull(message = "Sender cannot be empty", groups = CreateValidation.class)
-    private User sender;
+    @NotNull(message = "Sender cannot be empty")
+    private int sender_id;
 
-    @NotNull(message = "Recipient cannot be empty", groups = CreateValidation.class)
-    private User recipient;
+    @NotNull(message = "Recipient cannot be empty")
+    private int recipient_id;
 
-    @NotNull(message = "Sender department cannot be empty", groups = CreateValidation.class)
-    private Department department_sender;
+    @NotNull(message = "Sender department cannot be empty")
+    private int department_sender_id;
 
-    @NotNull(message = "Recipient department cannot be empty", groups = CreateValidation.class)
-    private Department department_recipient;
+    @NotNull(message = "Recipient department cannot be empty")
+    private int department_recipient_id;
 
-    @NotNull(message = "Employee cannot be empty", groups = CreateValidation.class)
-    private Employee employee;
-
-    @NotNull(message = "Status cannot be empty", groups = CreateValidation.class)
-    private Status status;
+    @NotNull(message = "Employee cannot be empty")
+    private int employee_id;
 }

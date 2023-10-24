@@ -2,15 +2,15 @@ package api.entity;
 
 import api.valueobject.Status;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
 public class Order {
@@ -32,23 +32,26 @@ public class Order {
     @Column(name = "delivery_price")
     private BigDecimal delivery_price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "total_price")
+    private BigDecimal total_price;
+
+    @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "recipient_id")
     private User recipient;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "department_sender_id")
     private Department department_sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "department_recipient_id")
     private Department department_recipient;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
