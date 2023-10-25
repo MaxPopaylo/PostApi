@@ -8,3 +8,8 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_USER: postgres
       POSTGRES_DB: post_db
+
+  frontend:
+    build: UI/.
+    ports:
+      - "9091:80"
