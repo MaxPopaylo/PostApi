@@ -2,6 +2,7 @@ package api.service;
 
 import api.dto.OrderDto;
 import api.entity.Order;
+import api.entity.User;
 import api.repository.OrderRepository;
 import api.utils.exceptions.EntityNotFoundException;
 import api.valueobject.Status;
@@ -28,6 +29,20 @@ public class OrderService {
 
     public Optional<Order> getOrderById(int id) {
         return repository.findById(id);
+    }
+
+    public List<Order> getOrdersBySender(int sender_id) {
+        User user = userService.showById(sender_id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return repository.findOrdersBySender(user);
+    }
+
+    public List<Order> getOrdersByRecipient(int recipient_id) {
+        User user = userService.showById(recipient_id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        return repository.findOrdersByRecipient(user);
     }
 
     @Transactional
@@ -60,7 +75,6 @@ public class OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found")));
         repository.save(order);
     }
-
 
 
 }

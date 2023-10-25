@@ -35,6 +35,16 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
+    @GetMapping("/by_sender/{sender_id}")
+    public ResponseEntity<?> showOrdersBySender(@PathVariable int sender_id) {
+        return new ResponseEntity<>(service.getOrdersBySender(sender_id), HttpStatus.OK);
+    }
+
+    @GetMapping("/by_recipient/{recipient_id}")
+    public ResponseEntity<?> showOrdersByRecipient(@PathVariable int recipient_id) {
+        return new ResponseEntity<>(service.getOrdersByRecipient(recipient_id), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}/status")
     public ResponseEntity<?> checkStatus(@PathVariable int id) {
         Order order = checkOrder(id);
