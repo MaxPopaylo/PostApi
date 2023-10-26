@@ -23,6 +23,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/employees")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:9091")
 public class EmployeeController {
 
     private final EmployeeService service;

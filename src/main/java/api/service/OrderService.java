@@ -76,5 +76,10 @@ public class OrderService {
         repository.save(order);
     }
 
+    @Transactional
+    public void update(Order order) {
+        repository.save(order);
+    }
+
 
 }

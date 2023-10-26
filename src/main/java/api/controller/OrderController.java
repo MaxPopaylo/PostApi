@@ -20,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:9091")
 public class OrderController {
 
     private final OrderService service;
@@ -87,11 +88,11 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/cancelled")
-    public ResponseEntity<?> changeOnCancelled(@PathVariable int id, @RequestBody IdDto employee_id) {
+    public ResponseEntity<?> changeOnCancelled(@PathVariable int id) {
         Order order = checkOrder(id);
         order.setStatus(Status.CANCELLED);
 
-        service.update(order, employee_id.getId());
+        service.update(order);
         return new ResponseEntity<>("Order was " + order.getStatus(), HttpStatus.OK);
     }
 
