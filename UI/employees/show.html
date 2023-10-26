@@ -91,26 +91,29 @@
                 <p id="userPatronymic"></p>
             </div>
         </div>
-        <button onclick="onBack()" class="btn btn-dark">Back</button>
-    </div>
-
-
-    <!-- Orders Table -->
-    <div class="orders" style="margin-top: 3%">
-        <h3>Orders</h3>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Order Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col">
+                <strong>Experience:</strong>
+                <p id="userExperience"></p>
+            </div>
+            <div class="col">
+                <strong>Hired:</strong>
+                <p id="userHired"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <strong>Fired:</strong>
+                <p id="userFired"></p>
+            </div>
+            <div class="col">
+                <strong>Work Department:</strong>
+                <p>
+                    <a href="http://localhost:9091/departments/" id="userWorkDepartment"></a>
+                </p>
+            </div>
+        </div>
+        <a href="http://localhost:9091/employees" class="btn btn-dark">Back</a>
     </div>
 
 </div>
@@ -122,21 +125,26 @@
 <script>
     $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('id');
+        const employeeId = urlParams.get('id');
 
         function fetchUserData() {
             $.ajax({
                 type: 'GET',
-                url: `http://localhost:8080/users/${userId}`,
+                url: `http://localhost:8080/employees/${employeeId}`,
                 dataType: 'json',
-                success: function (userData) {
-                    console.log(userData)
-                    $('#userId').text(userData.id);
-                    $('#userEmail').text(userData.email);
-                    $('#userName').text(userData.name);
-                    $('#userSurname').text(userData.surname);
-                    $('#userPatronymic').text(userData.patronymic);
-                    $('#userPhone').text(userData.phone);
+                success: function (employeeData) {
+                    const email = employeeData.email ? employeeData.email : '';
+                    const fired = employeeData.fired ? employeeData.fired : 'Not Fired';
+                    $('#userId').text(employeeData.id);
+                    $('#userEmail').text(email);
+                    $('#userName').text(employeeData.name);
+                    $('#userSurname').text(employeeData.surname);
+                    $('#userPatronymic').text(employeeData.patronymic);
+                    $('#userPhone').text(employeeData.phone);
+                    $('#userExperience').text(employeeData.experience);
+                    $('#userHired').text(employeeData.hired);
+                    $('#userFired').text(fired);
+                    $('#userWorkDepartment').text(employeeData.work_department.id);
                 },
                 error: function (xhr, status, error) {
                     console.error('Failed to fetch user data:', error);
@@ -144,68 +152,9 @@
             });
         }
 
-        function fetchOrdersByRecipient() {
-            $.ajax({
-                type: 'GET',
-                url: `http://localhost:8080/orders/by_recipient/${userId}`,
-                dataType: 'json',
-                success: function (orders) {
-                    const userOrders = $('.orders tbody');
-                    userOrders.empty();
-
-                    orders.forEach(function (order) {
-                        const orderRow = `<tr>
-                            <td>${order.id}</td>
-                            <td>${order.title}</td>
-                            <td>${order.total_price}</td>
-                            <td>${order.status}</td>
-                            <td>
-                            <button class="btn btn-danger cancel-order" data-order-id="${order.id}">Cancel</button>
-                            <button class="btn btn-info show-order" data-order-id="${order.id}">Show</button>
-                            </td>
-                        </tr>`;
-                        userOrders.append(orderRow);
-                    });
-                },
-                error: function (xhr, status, error) {
-                    console.error('Failed to fetch user orders:', error);
-                }
-            });
-        }
-
         fetchUserData();
-        fetchOrdersByRecipient();
-
-        $('.orders').on('click', '.cancel-order', function () {
-            const orderId = $(this).data('order-id');
-
-            if (confirm(`Are you sure you want to cancel the order with ID ${orderId}?`)) {
-                $.ajax({
-                    type: 'PATCH',
-                    url: `http://localhost:8080/orders/${orderId}/cancelled`,
-                    success: function () {
-                        alert(`The order with ID ${orderId} has been successfully cancelled.`);
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Failed to cancel order:', error);
-                    }
-                });
-            }
-        });
-
-        $('.orders').on('click', '.show-order', function () {
-            const orderId = $(this).data('order-id');
-            window.location.href = `http://localhost:9091/orders/show.html?id=${orderId}`;
-        });
     });
-
-    function onBack() {
-        window.history.back();
-    }
 </script>
-
-
 
 </body>
 </html>
