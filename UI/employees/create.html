@@ -41,11 +41,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Orders</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Unknown</a>
-                        <a class="dropdown-item" href="#">Unknown</a>
-                        <a class="dropdown-item" href="#">Unknown</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/">Order List</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/search.html">Search Order</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Unknown</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/create.html">Register Order</a>
                     </div>
                 </li>
             </ul>
@@ -81,12 +80,15 @@
             <label for="experience">Experience:</label>
             <input type="text" class="form-control" id="experience" name="experience">
         </div>
+
         <div class="form-group">
-            <label for="work_department_id">Work_Department_id:</label>
-            <input type="text" class="form-control" id="work_department_id" name="work_department_id">
+            <label for="departmentSelect" >Work_Department ID:</label>
+            <select class="form-control" id="departmentSelect" name="work_department_id">
+            </select>
         </div>
+
         <button type="submit" class="btn btn-dark">Create Employee</button>
-        <a href="http://localhost:9091/employees" class="btn btn-dark">Back</a>
+        <a href="http://localhost:9091/employees/" class="btn btn-dark">Back</a>
     </form>
 </div>
 
@@ -97,6 +99,29 @@
 
 <script>
     $(document).ready(function () {
+
+        $.ajax({
+            url: 'http://localhost:8080/departments',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var departmentSelect = $('#departmentSelect');
+
+                departmentSelect.empty();
+
+                $.each(data, function (index, department) {
+                    departmentSelect.append($('<option>', {
+                        value: department.id,
+                        text: department.title
+                    }));
+
+                });
+            },
+            error: function () {
+                console.log('Помилка при виконанні запиту');
+            }
+        });
+
         $('form').submit(function (e) {
             e.preventDefault();
 
@@ -106,7 +131,7 @@
             const patronymic = $('#patronymic').val() || null;
             const phone = $('#phone').val() || null;
             const experience = $('#experience').val() || null;
-            const work_department_id = $('#work_department_id').val() || null;
+            const work_department_id = $('select[name="work_department_id"]').val() || null;
 
             const data = {
                 email: email,
@@ -143,6 +168,14 @@
         }
 
     });
+
+    window.onload = function () {
+        var inputs = document.querySelectorAll('input');
+
+        inputs.forEach(function (input) {
+            input.value = '';
+        });
+    };
 
 </script>
 

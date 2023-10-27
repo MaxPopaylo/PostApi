@@ -35,14 +35,14 @@ public class OrderService {
         User user = userService.showById(sender_id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return repository.findOrdersBySender(user);
+        return repository.findOrdersBySenderOrderByIdDesc(user);
     }
 
     public List<Order> getOrdersByRecipient(int recipient_id) {
         User user = userService.showById(recipient_id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return repository.findOrdersByRecipient(user);
+        return repository.findOrdersByRecipientOrderByIdDesc(user);
     }
 
     @Transactional

@@ -55,49 +55,11 @@
 
 
 <div class="container custom-background mx-auto my-4">
-    <h2 class="mb-4">User Profile</h2>
-    <div id="message-container" class="alert" style="display: none;"></div>
-
-    <!-- User Information Section -->
-    <div class="user-info">
-        <div class="row">
-            <div class="col">
-                <strong>ID:</strong>
-                <p id="userId"></p>
-            </div>
-            <div class="col">
-                <strong>Name:</strong>
-                <p id="userName"></p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <strong>Email:</strong>
-                <p id="userEmail"></p>
-            </div>
-            <div class="col">
-                <strong>Surname:</strong>
-                <p id="userSurname"></p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <strong>Phone:</strong>
-                <p id="userPhone"></p>
-            </div>
-            <div class="col">
-                <strong>Patronymic:</strong>
-                <p id="userPatronymic"></p>
-            </div>
-        </div>
-        <button id="sentOrdersButton" class="btn btn-dark">Check sent orders</button>
-        <button onclick="onBack()" class="btn btn-dark">Back</button>
-    </div>
-
-
-    <!-- Orders Table -->
     <div class="orders" style="margin-top: 3%">
-        <h3>Orders</h3>
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Orders Sent</h3>
+            <button onclick="onBack()" class="btn btn-dark">Back</button>
+        </div>
         <table class="table">
             <thead>
             <tr>
@@ -120,34 +82,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('id');
-
-        function fetchUserData() {
-            $.ajax({
-                type: 'GET',
-                url: `http://localhost:8080/users/${userId}`,
-                dataType: 'json',
-                success: function (userData) {
-                    console.log(userData)
-                    $('#userId').text(userData.id);
-                    $('#userEmail').text(userData.email);
-                    $('#userName').text(userData.name);
-                    $('#userSurname').text(userData.surname);
-                    $('#userPatronymic').text(userData.patronymic);
-                    $('#userPhone').text(userData.phone);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Failed to fetch user data:', error);
-                }
-            });
-        }
-
         function fetchOrdersByRecipient() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+
             $.ajax({
                 type: 'GET',
-                url: `http://localhost:8080/orders/by_recipient/${userId}`,
+                url: `http://localhost:8080/orders/by_sender/${userId}`,
                 dataType: 'json',
                 success: function (orders) {
                     const userOrders = $('.orders tbody');
@@ -173,44 +114,16 @@
             });
         }
 
-        fetchUserData();
         fetchOrdersByRecipient();
-
-        $('.orders').on('click', '.cancel-order', function () {
-            const orderId = $(this).data('order-id');
-
-            if (confirm(`Are you sure you want to cancel the order with ID ${orderId}?`)) {
-                $.ajax({
-                    type: 'PATCH',
-                    url: `http://localhost:8080/orders/${orderId}/cancelled`,
-                    success: function () {
-                        alert(`The order with ID ${orderId} has been successfully cancelled.`);
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Failed to cancel order:', error);
-                    }
-                });
-            }
-        });
 
         $('.orders').on('click', '.show-order', function () {
             const orderId = $(this).data('order-id');
             window.location.href = `http://localhost:9091/orders/show.html?id=${orderId}`;
         });
-    });
 
-    function onBack() {
-        window.history.back();
-    }
-
-    $('#sentOrdersButton').click(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('id');
-
-        window.location.href = `http://localhost:9091/users/sent_orders.html?id=${userId}`;
-    });
-
+        function onBack() {
+            window.history.back();
+        }
 
 </script>
 

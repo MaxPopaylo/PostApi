@@ -41,11 +41,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Orders</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Unknown</a>
-                        <a class="dropdown-item" href="#">Unknown</a>
-                        <a class="dropdown-item" href="#">Unknown</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/">Order List</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/search.html">Search Order</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Unknown</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/create.html">Register Order</a>
                     </div>
                 </li>
             </ul>
@@ -56,7 +55,10 @@
 <div class="container mx-auto my-4">
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-4">Employee List</h2>
-        <a href="http://localhost:9091/employees/create.html" class="btn btn-dark">Create Employee</a>
+        <div>
+            <a href="http://localhost:9091/employees/fired.html" class="btn btn-dark">Fired Employees</a>
+            <a href="http://localhost:9091/employees/create.html" class="btn btn-dark">Hire Employee</a>
+        </div>
     </div>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover">
@@ -89,7 +91,6 @@
             url: 'http://localhost:8080/employees',
             dataType: 'json',
             success: function (data) {
-                console.log(data);
                 const employeeList = $('#employee-list');
                 employeeList.empty();
 

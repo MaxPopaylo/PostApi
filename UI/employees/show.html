@@ -42,11 +42,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Orders</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Unknown</a>
-                        <a class="dropdown-item" href="#">Unknown</a>
-                        <a class="dropdown-item" href="#">Unknown</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/">Order List</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/search.html">Search Order</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Unknown</a>
+                        <a class="dropdown-item" href="http://localhost:9091/orders/create.html">Register Order</a>
                     </div>
                 </li>
             </ul>
@@ -56,7 +55,7 @@
 
 
 <div class="container custom-background mx-auto my-4">
-    <h2 class="mb-4">User Profile</h2>
+    <h2 class="mb-4">Employee Profile</h2>
     <div id="message-container" class="alert" style="display: none;"></div>
 
     <!-- User Information Section -->
@@ -113,7 +112,7 @@
                 </p>
             </div>
         </div>
-        <a href="http://localhost:9091/employees" class="btn btn-dark">Back</a>
+        <a href="http://localhost:9091/employees/" class="btn btn-dark">Back</a>
     </div>
 
 </div>
@@ -127,7 +126,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const employeeId = urlParams.get('id');
 
-        function fetchUserData() {
+        function fetchEmployeeData() {
             $.ajax({
                 type: 'GET',
                 url: `http://localhost:8080/employees/${employeeId}`,
@@ -152,7 +151,7 @@
             });
         }
 
-        fetchUserData();
+        fetchEmployeeData();
     });
 </script>
 

@@ -1,7 +1,6 @@
 package api.controller;
 
 import api.dto.EmployeeDto;
-import api.dto.SearchByPhoneDto;
 import api.entity.Department;
 import api.entity.Employee;
 import api.service.DepartmentService;
@@ -42,16 +41,6 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable int id) {
         Employee employee = checkEmployee(id);
-        return new ResponseEntity<>(employee, HttpStatus.OK);
-    }
-
-    @GetMapping("/by_phone")
-    public ResponseEntity<?> showByPhone(@RequestBody SearchByPhoneDto dto) {
-        Optional<Employee> employee = service.showByPhone(dto.getPhone());
-        if (employee.isEmpty()) {
-            throw new EntityNotFoundException("Employee not found");
-        }
-
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 

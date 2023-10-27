@@ -1,6 +1,5 @@
 package api.controller;
 
-import api.dto.SearchByPhoneDto;
 import api.dto.UserDto;
 import api.entity.User;
 import api.service.UserService;
@@ -38,8 +37,8 @@ public class UserController {
     }
 
     @GetMapping("/by_phone")
-    public ResponseEntity<?> showByPhone(@RequestBody SearchByPhoneDto dto) {
-        Optional<User> user = userService.showByPhone(dto.getPhone());
+    public ResponseEntity<?> showByPhone(@RequestParam String phone) {
+        Optional<User> user = userService.showByPhone(phone);
         if (user.isEmpty()) {
             throw new EntityNotFoundException("User not found");
         }

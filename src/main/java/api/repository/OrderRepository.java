@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    List<Order> findOrdersBySender(User sender);
-    List<Order> findOrdersByRecipient(User recipient);
+    List<Order> findOrdersBySenderOrderByIdDesc(User sender);
+    List<Order> findOrdersByRecipientOrderByIdDesc(User recipient);
 }
