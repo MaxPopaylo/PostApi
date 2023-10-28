@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Sent Orders</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="shortcut icon" href="../img/favicon_users.ico">
     <style>
@@ -102,7 +102,6 @@
                             <td>${order.total_price}</td>
                             <td>${order.status}</td>
                             <td>
-                            <button class="btn btn-danger cancel-order" data-order-id="${order.id}">Cancel</button>
                             <button class="btn btn-info show-order" data-order-id="${order.id}">Show</button>
                             </td>
                         </tr>`;

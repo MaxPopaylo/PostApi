@@ -4,6 +4,7 @@ import api.dto.UserDto;
 import api.entity.User;
 import api.service.UserService;
 import api.utils.exceptions.EntityNotFoundException;
+import api.utils.exceptions.PhoneAlreadyUseException;
 import api.utils.validations.BindingResultParser;
 import api.utils.validations.CreateValidation;
 import api.utils.validations.UpdateValidation;
@@ -49,6 +50,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> create(@Validated(CreateValidation.class) @RequestBody UserDto dto, BindingResult bindingResult) {
         checkValidation(bindingResult);
+        checkPhone(dto.getPhone());
         userService.save(dto);
         return new ResponseEntity<>("User " + dto.getSurname() + " " + dto.getName() + " was created",HttpStatus.CREATED);
     }
@@ -65,6 +67,7 @@ public class UserController {
                                     BindingResult bindingResult) {
         User pachedUser = checkUser(id);
         checkValidation(bindingResult);
+        checkPhone(dto.getPhone());
 
         dto.setEmail(dto.getEmail() == null ? pachedUser.getEmail() : dto.getEmail());
         dto.setName(dto.getName() == null ? pachedUser.getName() : dto.getName());
@@ -88,6 +91,12 @@ public class UserController {
     private void checkValidation (BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(BindingResultParser.parse(bindingResult));
+        }
+    }
+
+    private void checkPhone(String phone) {
+        if (phone != null && userService.showByPhone(phone).isPresent()) {
+            throw new PhoneAlreadyUseException();
         }
     }
 

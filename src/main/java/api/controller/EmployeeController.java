@@ -5,6 +5,7 @@ import api.entity.Department;
 import api.entity.Employee;
 import api.service.DepartmentService;
 import api.service.EmployeeService;
+import api.utils.exceptions.PhoneAlreadyUseException;
 import api.utils.validations.BindingResultParser;
 import api.utils.validations.CreateValidation;
 import api.utils.validations.UpdateValidation;
@@ -47,6 +48,7 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<?> hire(@Validated(CreateValidation.class) @RequestBody EmployeeDto dto, BindingResult bindingResult) {
         checkValidation(bindingResult);
+        checkPhone(dto.getPhone());
         Optional<Department> department = departmentService.showById(dto.getWork_department_id());
         if (department.isEmpty()) {
             throw new EntityNotFoundException("Department not found");
@@ -92,6 +94,12 @@ public class EmployeeController {
     private void checkValidation (BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException(BindingResultParser.parse(bindingResult));
+        }
+    }
+
+    private void checkPhone(String phone) {
+        if (service.showByPhone(phone).isPresent()) {
+            throw new PhoneAlreadyUseException();
         }
     }
 

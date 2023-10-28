@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New User</title>
+    <title>Hire Employee</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="shortcut icon" href="../img/favicon_employees.ico">
     <style>
@@ -76,10 +76,15 @@
             <label for="phone">Phone:</label>
             <input type="text" class="form-control" id="phone" name="phone">
         </div>
+
         <div class="form-group">
-            <label for="experience">Experience:</label>
-            <input type="text" class="form-control" id="experience" name="experience">
+            <label for="customRange1" class="form-label">Experience:</label>
+            <div class="d-flex align-items-center">
+                <input type="range" class="form-range flex-grow-1" id="customRange1" min="0" max="10" step="1" value="0">
+                <input type="text" class="form-control flex-grow-1 ml-2" id="experience" name="experience" value="0" readonly>
+            </div>
         </div>
+
 
         <div class="form-group">
             <label for="departmentSelect" >Work_Department ID:</label>
@@ -87,7 +92,7 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-dark">Create Employee</button>
+        <button type="submit" class="btn btn-dark">Hire Employee</button>
         <a href="http://localhost:9091/employees/" class="btn btn-dark">Back</a>
     </form>
 </div>
@@ -99,6 +104,15 @@
 
 <script>
     $(document).ready(function () {
+
+        const experienceInput = $('#experience');
+        const customRange = $('#customRange1');
+
+        experienceInput.val(customRange.val());
+
+        customRange.on('input', function () {
+            experienceInput.val($(this).val());
+        });
 
         $.ajax({
             url: 'http://localhost:8080/departments',
@@ -118,7 +132,7 @@
                 });
             },
             error: function () {
-                console.log('Помилка при виконанні запиту');
+                console.log('Error');
             }
         });
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Info</title>
+    <title>Search Order</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="shortcut icon" href="../img/favicon-orders.ico">
     <link rel="shortcut icon" href="#">
@@ -24,15 +24,15 @@
         }
 
         .status-sent {
-            color: blue;
+            color: #17a2b8;
         }
 
         .status-came {
-            color: orange;
+            color: #ffc107;
         }
 
         .status-received {
-            color: purple;
+            color: blue;
         }
 
         .status-cancelled {
@@ -122,11 +122,15 @@
         <div class="row">
             <div class="col">
                 <strong>Sender:</strong>
-                <p id="sender"></p>
+                <p>
+                    <a href="" id="sender"></a>
+                </p>
             </div>
             <div class="col">
                 <strong>Recipient:</strong>
-                <p id="recipient"></p>
+                <p>
+                    <a href="" id="recipient"></a>
+                </p>
             </div>
         </div>
         <div class="row">
@@ -142,11 +146,16 @@
         <div class="row">
             <div class="col">
                 <strong>Employee ID:</strong>
-                <p id="employeeId"></p>
+                <p>
+                    <a href="" id="employeeId"></a>
+                </p>
             </div>
             <div class="col">
                 <strong>Status:</strong>
-                <p id="orderStatus" class="status-{{status}}"></p>
+                <a id="orderStatus" class="status-{{status}}"></a>
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
             </div>
         </div>
         <button id="sentButton" class="btn btn-dark" style="display: none;">SENT</button>
@@ -178,19 +187,54 @@
 
     function displayOrderInfo(order) {
 
+        const sender_Id = order.sender.id;
+        const senderLink = `http://localhost:9091/users/show.html?id=${sender_Id}`;
+        document.getElementById('sender').setAttribute('href', senderLink);
+
+        const recipient_Id = order.recipient.id;
+        const recipientLink = `http://localhost:9091/users/show.html?id=${recipient_Id}`;
+        document.getElementById('recipient').setAttribute('href', recipientLink);
+
+        const employee_Id = order.employee.id;
+        const employeeLink = `http://localhost:9091/employees/show.html?id=${employee_Id}`;
+        document.getElementById('employeeId').setAttribute('href', employeeLink);
+
 
         $('#orderId').text(order.id);
         $('#orderTitle').text(order.title);
         $('#orderType').text(order.type);
-        $('#parcelPrice').text(order.parcel_price);
-        $('#deliveryPrice').text(order.delivery_price);
-        $('#totalPrice').text(order.total_price);
+        $('#parcelPrice').text('$' + order.parcel_price);
+        $('#deliveryPrice').text('$' +  order.delivery_price);
+        $('#totalPrice').text('$' + order.total_price);
         $('#sender').text(order.sender.name + ' ' + order.sender.surname);
         $('#recipient').text(order.recipient.name + ' ' + order.recipient.surname);
         $('#departmentSender').text(order.department_sender.address);
         $('#departmentRecipient').text(order.department_recipient.address);
         $('#employeeId').text(order.employee.id);
         $('#orderStatus').text(order.status)
+
+        const status = order.status;
+        const percent = getStatusPercent(status);
+
+        $('#progress-bar').css('width', percent + '%');
+
+        if (status.toLowerCase() === 'created') {
+            $('#progress-bar').addClass('bg-success');
+        } else if (status.toLowerCase() === 'sent') {
+            $('#progress-bar').addClass('bg-info');
+        } else if (status.toLowerCase() === 'came') {
+            $('#progress-bar').addClass('bg-warning');
+        } else if (status.toLowerCase() === 'received') {
+            $('#progress-bar').addClass('bg-purple');
+        } else if (status.toLowerCase() === 'cancelled') {
+            $('#progress-bar').addClass('bg-danger');
+        }
+
+        if (status.toLowerCase() === 'cancelled') {
+            $('#progress-bar').text(status);
+        } else {
+            $('#progress-bar').text(percent + '% ' + status);
+        }
 
         const statusClass = getStatusClass(order.status);
         $('#orderStatus').addClass(`status-${statusClass}`);
@@ -241,6 +285,22 @@
         }
     }
 
+    function getStatusPercent(status) {
+        if (status.toLowerCase() === 'created') {
+            return 25;
+        } else if (status.toLowerCase() === 'sent') {
+            return 50;
+        } else if (status.toLowerCase() === 'came') {
+            return 75;
+        } else if (status.toLowerCase() === 'received') {
+            return 100;
+        } else if (status.toLowerCase() === 'cancelled') {
+            return 100;
+        } else {
+            return 0;
+        }
+    }
+
     $('#sentButton').click(function () {
         const orderId = $('#orderId').text();
         const employeeId = prompt('Enter the employee ID:');
@@ -256,6 +316,7 @@
                 contentType: 'application/json',
                 success: function () {
                     displayMessage('The order has been sent.', 'alert-success');
+                    location.reload();
                 },
                 error: function () {
                     displayMessage('Error sending the order.', 'alert-danger');
@@ -279,6 +340,7 @@
                 contentType: 'application/json',
                 success: function () {
                     displayMessage('The order has been sent.', 'alert-success');
+                    location.reload();
                 },
                 error: function () {
                     displayMessage('Error sending the order.', 'alert-danger');
@@ -302,6 +364,7 @@
                 contentType: 'application/json',
                 success: function () {
                     displayMessage('The order has been sent.', 'alert-success');
+                    location.reload();
                 },
                 error: function () {
                     displayMessage('Error sending the order.', 'alert-danger');
@@ -310,6 +373,13 @@
         }
     });
 
+    window.onload = function () {
+        var inputs = document.querySelectorAll('input');
+
+        inputs.forEach(function (input) {
+            input.value = '';
+        });
+    };
 
 </script>
 

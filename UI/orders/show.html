@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order</title>
+    <title>Order Info</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="shortcut icon" href="../img/favicon-orders.ico">
     <style>
@@ -24,15 +24,15 @@
         }
 
         .status-sent {
-            color: blue;
+            color: #17a2b8;
         }
 
         .status-came {
-            color: orange;
+            color: #ffc107;
         }
 
         .status-received {
-            color: purple;
+            color: blue;
         }
 
         .status-cancelled {
@@ -136,7 +136,10 @@
             </div>
             <div class="col">
                 <strong>Status:</strong>
-                <p id="orderStatus" class="status-{{status}}"></p>
+                <a id="orderStatus" class="status-{{status}}"></a>
+                <div class="progress">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" style="" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
             </div>
         </div>
 
@@ -161,15 +164,38 @@
                     $('#userId').text(orderData.id);
                     $('#orderTitle').text(orderData.title);
                     $('#orderType').text(orderData.type);
-                    $('#parcelPrice').text(orderData.parcel_price);
-                    $('#deliveryPrice').text(orderData.delivery_price);
-                    $('#totalPrice').text(orderData.total_price);
+                    $('#parcelPrice').text('$' + orderData.parcel_price);
+                    $('#deliveryPrice').text('$' + orderData.delivery_price);
+                    $('#totalPrice').text('$' + orderData.total_price);
                     $('#senderName').text(orderData.sender.name + ' ' + orderData.sender.surname);
                     $('#recipientName').text(orderData.recipient.name + ' ' + orderData.recipient.surname);
                     $('#departmentSenderAddress').text(orderData.department_sender.address);
                     $('#departmentRecipientAddress').text(orderData.department_recipient.address);
                     $('#employeeId').text(orderData.employee.id);
                     $('#orderStatus').text(orderData.status)
+
+                    const status = orderData.status;
+                    const percent = getStatusPercent(status);
+
+                    $('#progress-bar').css('width', percent + '%');
+
+                    if (status.toLowerCase() === 'created') {
+                        $('#progress-bar').addClass('bg-success');
+                    } else if (status.toLowerCase() === 'sent') {
+                        $('#progress-bar').addClass('bg-info');
+                    } else if (status.toLowerCase() === 'came') {
+                        $('#progress-bar').addClass('bg-warning');
+                    } else if (status.toLowerCase() === 'received') {
+                        $('#progress-bar').addClass('bg-purple');
+                    } else if (status.toLowerCase() === 'cancelled') {
+                        $('#progress-bar').addClass('bg-danger');
+                    }
+
+                    if (status.toLowerCase() === 'cancelled') {
+                        $('#progress-bar').text(status);
+                    } else {
+                        $('#progress-bar').text(percent + '% ' + status);
+                    }
 
                     const statusClass = getStatusClass(orderData.status);
                     $('#orderStatus').addClass(`status-${statusClass}`);
@@ -194,6 +220,22 @@
                 return 'cancelled';
             } else {
                 return 'unknown';
+            }
+        }
+
+        function getStatusPercent(status) {
+            if (status.toLowerCase() === 'created') {
+                return 25;
+            } else if (status.toLowerCase() === 'sent') {
+                return 50;
+            } else if (status.toLowerCase() === 'came') {
+                return 75;
+            } else if (status.toLowerCase() === 'received') {
+                return 100;
+            } else if (status.toLowerCase() === 'cancelled') {
+                return 100;
+            } else {
+                return 0;
             }
         }
 
