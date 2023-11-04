@@ -57,6 +57,11 @@ public class EmployeeService {
         repository.save(employee);
     }
 
+    @Transactional
+   public void delete(int id) {
+        repository.deleteById(id);
+    }
+
     private Employee convertEmployeeDto(EmployeeDto dto) {
         Employee employee = new Employee();
 

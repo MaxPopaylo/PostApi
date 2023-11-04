@@ -48,7 +48,7 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<?> hire(@Validated(CreateValidation.class) @RequestBody EmployeeDto dto, BindingResult bindingResult) {
         checkValidation(bindingResult);
-        checkPhone(dto.getPhone());
+        checkPhone(dto);
         Optional<Department> department = departmentService.showById(dto.getWork_department_id());
         if (department.isEmpty()) {
             throw new EntityNotFoundException("Department not found");
@@ -70,6 +70,7 @@ public class EmployeeController {
                                     BindingResult bindingResult) {
         Employee pachedEmployee = checkEmployee(id);
         checkValidation(bindingResult);
+        checkPhone(dto.getPhone());
 
         pachedEmployee.setEmail(dto.getEmail() == null ? pachedEmployee.getEmail() : dto.getEmail());
         pachedEmployee.setName(dto.getName() == null ? pachedEmployee.getName() : dto.getName());
@@ -102,5 +103,19 @@ public class EmployeeController {
             throw new PhoneAlreadyUseException();
         }
     }
+
+    private void checkPhone(EmployeeDto dto) {
+        Optional<Employee> employee = service.showByPhone(dto.getPhone());
+        if (employee.isPresent()) {
+
+            if (employee.get().getFired() != null) {
+              service.delete(employee.get().getId());
+            } else {
+                throw new PhoneAlreadyUseException();
+            }
+
+        }
+    }
+
 
 }

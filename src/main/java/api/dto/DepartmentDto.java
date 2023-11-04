@@ -10,7 +10,7 @@ public class DepartmentDto {
     @NotNull(message = "Title cannot be empty", groups = CreateValidation.class)
     private String title;
 
-    @NotNull(message = "Title cannot be empty", groups = CreateValidation.class)
+    @NotNull(message = "Address cannot be empty", groups = CreateValidation.class)
     private String address;
 
 }

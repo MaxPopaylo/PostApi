@@ -25,6 +25,14 @@ public class DepartmentService {
         return repository.findById(id);
     }
 
+    public Optional<Department> showByAddress(String address) {
+        return repository.findDepartmentByAddress(address);
+    }
+
+    public Optional<Department> showByTitle(String title) {
+        return repository.findDepartmentByTitle(title);
+    }
+
     @Transactional
     public void create(DepartmentDto dto) {
         Department department = convertDepartmentDto(dto);
@@ -34,6 +42,11 @@ public class DepartmentService {
     @Transactional
     public void delete(int id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public void update(Department department) {
+        repository.save(department);
     }
 
 

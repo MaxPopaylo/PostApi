@@ -9,7 +9,7 @@ public class BindingResultParser {
         StringBuilder errorMsg = new StringBuilder();
         for (FieldError error : bindingResult.getFieldErrors()){
             errorMsg.append(error.getDefaultMessage())
-                    .append(";");
+                    .append(". ");
         }
 
         return errorMsg.toString();
